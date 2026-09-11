@@ -1,0 +1,3591 @@
+{
+ "_provenance": {
+  "captured": "2026-09-11",
+  "ltxvideo_commit": "15d09ab",
+  "sources": {
+   "t2v_i2v_two_stage": "LTX-2.5_T2V_I2V_Two_Stage_Distilled.json",
+   "t2v_i2v_single_stage": "LTX-2.5_T2V_I2V_Single_Stage_Distilled.json",
+   "a2v_two_stage": "LTX-2.5_A2V_Two_Stage_Distilled.json",
+   "t2a_single_stage": "LTX-2.5_T2A_Single_Stage_Distilled.json",
+   "iclora_ingredients": "LTX-2.5_ICLoRA_Ingredients_Single_Stage_Distilled.json",
+   "iclora_motion_track": "LTX-2.5_ICLoRA_Motion_Track_Distilled.json",
+   "template_t2v": "video_ltx2_5_t2v.json",
+   "template_i2v": "video_ltx2_5_i2v.json",
+   "template_flf2v": "video_ltx2_5_flf2v.json"
+  },
+  "note": "Node-type counts extracted from the upstream LTX-2.5 reference graphs, flattened across subgraph definitions. Committed so the Director's compiler can be checked against what upstream actually builds without needing those repos present. Regenerate with tools/capture_upstream.py."
+ },
+ "graphs": {
+  "t2v_i2v_two_stage": {
+   "node_counts": {
+    "CFGGuider": 2,
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 1,
+    "ComfyNotNode": 1,
+    "ComfySwitchNode": 4,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "GemmaAPITextEncode": 2,
+    "KSamplerSelect": 2,
+    "LTXFloatToInt": 1,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 2,
+    "LTXVConditioning": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVImgToVideoInplace": 2,
+    "LTXVLatentUpsampler": 1,
+    "LTXVPreprocess": 1,
+    "LTXVSeparateAVLatent": 2,
+    "LatentUpscaleModelLoader": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 2,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveFloat": 4,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 2,
+    "ResizeImageMaskNode": 1,
+    "SamplerCustomAdvanced": 2,
+    "SaveVideo": 1,
+    "StringContains": 1,
+    "TextGenerateLTX2Prompt": 2,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveFloat": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 3
+    },
+    "ComfyNotNode": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 0
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt",
+      "sampling_mode.seed"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "StringContains": {
+     "inputs": [
+      "string"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "enhance_prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "LTXVPreprocess": {
+     "inputs": [
+      "image",
+      "img_compression"
+     ],
+     "outputs": [
+      "output_image"
+     ],
+     "widgets": 1
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXFloatToInt": {
+     "inputs": [
+      "a"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 1
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "LTXVImgToVideoInplace": {
+     "inputs": [
+      "vae",
+      "image",
+      "latent",
+      "strength",
+      "bypass"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [
+      "sampler_name"
+     ],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae",
+      "tile_size",
+      "overlap",
+      "temporal_size",
+      "temporal_overlap"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVLatentUpsampler": {
+     "inputs": [
+      "samples",
+      "upscale_model",
+      "vae"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 0
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "LatentUpscaleModelLoader": {
+     "inputs": [
+      "model_name"
+     ],
+     "outputs": [
+      "LATENT_UPSCALE_MODEL"
+     ],
+     "widgets": 1
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    }
+   }
+  },
+  "t2v_i2v_single_stage": {
+   "node_counts": {
+    "CFGGuider": 1,
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 1,
+    "ComfyNotNode": 1,
+    "ComfySwitchNode": 4,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "GemmaAPITextEncode": 2,
+    "KSamplerSelect": 1,
+    "LTXFloatToInt": 1,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 1,
+    "LTXVConditioning": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVImgToVideoInplace": 1,
+    "LTXVPreprocess": 1,
+    "LTXVSeparateAVLatent": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 1,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveFloat": 4,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 1,
+    "ResizeImageMaskNode": 1,
+    "SamplerCustomAdvanced": 1,
+    "SaveVideo": 1,
+    "StringContains": 1,
+    "TextGenerateLTX2Prompt": 2,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveFloat": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 3
+    },
+    "ComfyNotNode": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 0
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt",
+      "sampling_mode.seed"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "StringContains": {
+     "inputs": [
+      "string"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "enhance_prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "LTXVPreprocess": {
+     "inputs": [
+      "image",
+      "img_compression"
+     ],
+     "outputs": [
+      "output_image"
+     ],
+     "widgets": 1
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXFloatToInt": {
+     "inputs": [
+      "a"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 1
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "LTXVImgToVideoInplace": {
+     "inputs": [
+      "vae",
+      "image",
+      "latent",
+      "strength",
+      "bypass"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [
+      "sampler_name"
+     ],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae",
+      "tile_size",
+      "overlap",
+      "temporal_size",
+      "temporal_overlap"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    }
+   }
+  },
+  "a2v_two_stage": {
+   "node_counts": {
+    "CFGGuider": 2,
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 1,
+    "ComfyNotNode": 1,
+    "ComfySwitchNode": 4,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "GemmaAPITextEncode": 2,
+    "KSamplerSelect": 2,
+    "LTXVAudioVAEEncode": 1,
+    "LTXVConcatAVLatent": 2,
+    "LTXVConditioning": 1,
+    "LTXVImgToVideoInplace": 2,
+    "LTXVLatentUpsampler": 1,
+    "LTXVPreprocess": 1,
+    "LTXVSeparateAVLatent": 2,
+    "LatentUpscaleModelLoader": 1,
+    "LoadAudio": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 2,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveFloat": 5,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 2,
+    "ResizeImageMaskNode": 1,
+    "SamplerCustomAdvanced": 2,
+    "SaveVideo": 1,
+    "SetLatentNoiseMask": 2,
+    "SolidMask": 2,
+    "StringContains": 1,
+    "TextGenerateLTX2Prompt": 2,
+    "TrimAudioDuration": 1,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "LoadImage": {
+     "inputs": [
+      "image",
+      "upload"
+     ],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video",
+      "filename_prefix",
+      "format",
+      "codec"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveFloat": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "LoadAudio": {
+     "inputs": [
+      "audio",
+      "audioUI",
+      "upload"
+     ],
+     "outputs": [
+      "AUDIO"
+     ],
+     "widgets": 3
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input",
+      "resize_type",
+      "resize_type.longer_size",
+      "scale_method"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 3
+    },
+    "ComfyNotNode": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 0
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt",
+      "max_length",
+      "sampling_mode",
+      "sampling_mode.temperature",
+      "sampling_mode.top_k",
+      "sampling_mode.top_p",
+      "sampling_mode.min_p",
+      "sampling_mode.repetition_penalty",
+      "sampling_mode.seed",
+      "sampling_mode.presence_penalty",
+      "thinking",
+      "use_default_template"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "StringContains": {
+     "inputs": [
+      "string",
+      "substring",
+      "case_sensitive"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c",
+      "expression"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "enhance_prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "LTXVPreprocess": {
+     "inputs": [
+      "image",
+      "img_compression"
+     ],
+     "outputs": [
+      "output_image"
+     ],
+     "widgets": 1
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length",
+      "batch_size"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXVImgToVideoInplace": {
+     "inputs": [
+      "vae",
+      "image",
+      "latent",
+      "strength",
+      "bypass"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "TrimAudioDuration": {
+     "inputs": [
+      "audio",
+      "start_index",
+      "duration"
+     ],
+     "outputs": [
+      "AUDIO"
+     ],
+     "widgets": 2
+    },
+    "LTXVAudioVAEEncode": {
+     "inputs": [
+      "audio",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio Latent"
+     ],
+     "widgets": 0
+    },
+    "SolidMask": {
+     "inputs": [
+      "value",
+      "width",
+      "height"
+     ],
+     "outputs": [
+      "MASK"
+     ],
+     "widgets": 3
+    },
+    "SetLatentNoiseMask": {
+     "inputs": [
+      "samples",
+      "mask"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 0
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [
+      "sampler_name"
+     ],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [
+      "sigmas"
+     ],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae",
+      "tile_size",
+      "overlap",
+      "temporal_size",
+      "temporal_overlap"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVLatentUpsampler": {
+     "inputs": [
+      "samples",
+      "upscale_model",
+      "vae"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 0
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name",
+      "weight_dtype"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "LatentUpscaleModelLoader": {
+     "inputs": [
+      "model_name"
+     ],
+     "outputs": [
+      "LATENT_UPSCALE_MODEL"
+     ],
+     "widgets": 1
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name",
+      "type",
+      "device"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    }
+   }
+  },
+  "t2a_single_stage": {
+   "node_counts": {
+    "CFGGuider": 1,
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 1,
+    "ComfySwitchNode": 3,
+    "GemmaAPITextEncode": 2,
+    "KSamplerSelect": 1,
+    "LTXFloatToInt": 1,
+    "LTXVAudioOnlyEmptyVideoLatent": 1,
+    "LTXVAudioOnlyModel": 1,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 1,
+    "LTXVConditioning": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVSeparateAVLatent": 1,
+    "ManualSigmas": 1,
+    "PreviewAny": 1,
+    "PreviewAudio": 1,
+    "PrimitiveFloat": 4,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 1,
+    "SamplerCustomAdvanced": 1,
+    "SaveAudioAdvanced": 1,
+    "StringContains": 1,
+    "TextGenerateLTX2Prompt": 1,
+    "UNETLoader": 1,
+    "VAELoader": 1
+   },
+   "signatures": {
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PrimitiveFloat": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "SaveAudioAdvanced": {
+     "inputs": [
+      "audio"
+     ],
+     "outputs": [
+      "audio"
+     ],
+     "widgets": 3
+    },
+    "PreviewAudio": {
+     "inputs": [
+      "audio"
+     ],
+     "outputs": [
+      "audio"
+     ],
+     "widgets": 0
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "LTXVAudioOnlyModel": {
+     "inputs": [
+      "model"
+     ],
+     "outputs": [
+      "model"
+     ],
+     "widgets": 0
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt",
+      "sampling_mode.seed"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "enhance_prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "StringContains": {
+     "inputs": [
+      "string"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioOnlyEmptyVideoLatent": {
+     "inputs": [],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "LTXFloatToInt": {
+     "inputs": [
+      "a"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 1
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "KSamplerSelect": {
+     "inputs": [],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    }
+   }
+  },
+  "iclora_ingredients": {
+   "node_counts": {
+    "CFGGuider": 1,
+    "CLIPLoader": 1,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 1,
+    "ComfySwitchNode": 2,
+    "CreateVideo": 2,
+    "EmptyLTXVLatentVideo": 1,
+    "GemmaAPITextEncode": 2,
+    "GetImageSize": 1,
+    "GetVideoComponents": 1,
+    "KSamplerSelect": 1,
+    "LTXAddVideoICLoRAGuide": 1,
+    "LTXICLoRALoaderModelOnly": 1,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 1,
+    "LTXVConditioning": 2,
+    "LTXVCropGuides": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVSeparateAVLatent": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 1,
+    "PrimitiveFloat": 2,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 1,
+    "RepeatImageBatch": 1,
+    "ResizeImageMaskNode": 1,
+    "SamplerCustomAdvanced": 1,
+    "SaveVideo": 1,
+    "StringContains": 1,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "PrimitiveStringMultiline": {
+     "inputs": [],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PrimitiveFloat": {
+     "inputs": [],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "LTXICLoRALoaderModelOnly": {
+     "inputs": [
+      "model",
+      "lora_name",
+      "strength_model"
+     ],
+     "outputs": [
+      "model",
+      "latent_downscale_factor"
+     ],
+     "widgets": 2
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "StringContains": {
+     "inputs": [
+      "string"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 3
+    },
+    "GetVideoComponents": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "widgets": 0
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [
+      "sampler_name"
+     ],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVCropGuides": {
+     "inputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae",
+      "tile_size",
+      "overlap",
+      "temporal_size",
+      "temporal_overlap"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXAddVideoICLoRAGuide": {
+     "inputs": [
+      "positive",
+      "negative",
+      "vae",
+      "latent",
+      "image",
+      "latent_downscale_factor"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 7
+    },
+    "GetImageSize": {
+     "inputs": [
+      "image"
+     ],
+     "outputs": [
+      "width",
+      "height",
+      "batch_size"
+     ],
+     "widgets": 0
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "RepeatImageBatch": {
+     "inputs": [
+      "image",
+      "amount"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 1
+    }
+   }
+  },
+  "iclora_motion_track": {
+   "node_counts": {
+    "CFGGuider": 1,
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 2,
+    "ComfyNotNode": 1,
+    "ComfySwitchNode": 4,
+    "CreateVideo": 2,
+    "EmptyLTXVLatentVideo": 1,
+    "GemmaAPITextEncode": 2,
+    "GetImageSize": 1,
+    "KSamplerSelect": 1,
+    "LTXAddVideoICLoRAGuide": 1,
+    "LTXICLoRALoaderModelOnly": 1,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 1,
+    "LTXVConditioning": 2,
+    "LTXVCropGuides": 1,
+    "LTXVDrawTracks": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVImgToVideoInplace": 1,
+    "LTXVSeparateAVLatent": 1,
+    "LTXVSparseTrackEditor": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 1,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveFloat": 2,
+    "PrimitiveInt": 1,
+    "PrimitiveStringMultiline": 2,
+    "RandomNoise": 1,
+    "ResizeImageMaskNode": 2,
+    "SamplerCustomAdvanced": 1,
+    "SaveVideo": 2,
+    "StringContains": 1,
+    "TextGenerateLTX2Prompt": 2,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "PrimitiveStringMultiline": {
+     "inputs": [],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "PrimitiveFloat": {
+     "inputs": [],
+     "outputs": [
+      "FLOAT"
+     ],
+     "widgets": 1
+    },
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "LTXVSparseTrackEditor": {
+     "inputs": [
+      "image",
+      "points_to_sample"
+     ],
+     "outputs": [
+      "tracks"
+     ],
+     "widgets": 4
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "Reroute": {
+     "inputs": [
+      ""
+     ],
+     "outputs": [
+      ""
+     ],
+     "widgets": 0
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "LTXICLoRALoaderModelOnly": {
+     "inputs": [
+      "model",
+      "lora_name",
+      "strength_model"
+     ],
+     "outputs": [
+      "model",
+      "latent_downscale_factor"
+     ],
+     "widgets": 2
+    },
+    "ComfyNotNode": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 0
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "GemmaAPITextEncode": {
+     "inputs": [
+      "api_key",
+      "prompt",
+      "enhance_prompt",
+      "ckpt_name"
+     ],
+     "outputs": [
+      "conditioning"
+     ],
+     "widgets": 4
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input",
+      "resize_type.multiple"
+     ],
+     "outputs": [
+      "resized",
+      "MASK"
+     ],
+     "widgets": 3
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt",
+      "sampling_mode.seed"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "StringContains": {
+     "inputs": [
+      "string"
+     ],
+     "outputs": [
+      "contains"
+     ],
+     "widgets": 3
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "CFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative",
+      "cfg"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [
+      "sampler_name"
+     ],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "Note": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVCropGuides": {
+     "inputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps",
+      "bit_depth"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae",
+      "tile_size",
+      "overlap",
+      "temporal_size",
+      "temporal_overlap"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXAddVideoICLoRAGuide": {
+     "inputs": [
+      "positive",
+      "negative",
+      "vae",
+      "latent",
+      "image",
+      "latent_downscale_factor"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 7
+    },
+    "LTXVImgToVideoInplace": {
+     "inputs": [
+      "vae",
+      "image",
+      "latent",
+      "bypass"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "GetImageSize": {
+     "inputs": [
+      "image"
+     ],
+     "outputs": [
+      "width",
+      "height",
+      "batch_size"
+     ],
+     "widgets": 0
+    },
+    "LTXVDrawTracks": {
+     "inputs": [
+      "tracks",
+      "width",
+      "height"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 3
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    }
+   }
+  },
+  "template_t2v": {
+   "node_counts": {
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 4,
+    "ComfySwitchNode": 1,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "KSamplerSelect": 2,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 2,
+    "LTXVConditioning": 1,
+    "LTXVDualCFGGuider": 2,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVLatentUpsampler": 1,
+    "LTXVSeparateAVLatent": 2,
+    "LatentUpscaleModelLoader": 1,
+    "ManualSigmas": 2,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveInt": 4,
+    "PrimitiveStringMultiline": 1,
+    "RandomNoise": 2,
+    "ResolutionSelector": 1,
+    "SamplerCustomAdvanced": 2,
+    "SaveVideo": 1,
+    "TextGenerateLTX2Prompt": 1,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "ResolutionSelector": {
+     "inputs": [],
+     "outputs": [
+      "width",
+      "height"
+     ],
+     "widgets": 3
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "LTXVLatentUpsampler": {
+     "inputs": [
+      "samples",
+      "upscale_model",
+      "vae"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 0
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "KSamplerSelect": {
+     "inputs": [],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "LTXVDualCFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 2
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "LatentUpscaleModelLoader": {
+     "inputs": [
+      "model_name"
+     ],
+     "outputs": [
+      "LATENT_UPSCALE_MODEL"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    }
+   }
+  },
+  "template_i2v": {
+   "node_counts": {
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 4,
+    "ComfySwitchNode": 1,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "KSamplerSelect": 2,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 2,
+    "LTXVConditioning": 1,
+    "LTXVDualCFGGuider": 2,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVImgToVideoInplace": 2,
+    "LTXVLatentUpsampler": 1,
+    "LTXVPreprocess": 1,
+    "LTXVSeparateAVLatent": 2,
+    "LatentUpscaleModelLoader": 1,
+    "LoadImage": 1,
+    "ManualSigmas": 2,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 2,
+    "PrimitiveInt": 4,
+    "PrimitiveStringMultiline": 1,
+    "RandomNoise": 2,
+    "ResizeImageMaskNode": 1,
+    "ResolutionSelector": 1,
+    "SamplerCustomAdvanced": 2,
+    "SaveVideo": 1,
+    "TextGenerateLTX2Prompt": 1,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "ResolutionSelector": {
+     "inputs": [],
+     "outputs": [
+      "width",
+      "height"
+     ],
+     "widgets": 3
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "KSamplerSelect": {
+     "inputs": [],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 1
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "LatentUpscaleModelLoader": {
+     "inputs": [
+      "model_name"
+     ],
+     "outputs": [
+      "LATENT_UPSCALE_MODEL"
+     ],
+     "widgets": 1
+    },
+    "LTXVDualCFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 2
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVImgToVideoInplace": {
+     "inputs": [
+      "vae",
+      "image",
+      "latent",
+      "bypass"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 3
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "LTXVPreprocess": {
+     "inputs": [
+      "image"
+     ],
+     "outputs": [
+      "output_image"
+     ],
+     "widgets": 1
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "LTXVLatentUpsampler": {
+     "inputs": [
+      "samples",
+      "upscale_model",
+      "vae"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 0
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    }
+   }
+  },
+  "template_flf2v": {
+   "node_counts": {
+    "CLIPLoader": 2,
+    "CLIPTextEncode": 2,
+    "ComfyMathExpression": 2,
+    "ComfySwitchNode": 1,
+    "CreateVideo": 1,
+    "EmptyLTXVLatentVideo": 1,
+    "GetImageSize": 1,
+    "LTXVAddGuide": 2,
+    "LTXVAudioVAEDecode": 1,
+    "LTXVConcatAVLatent": 1,
+    "LTXVConditioning": 1,
+    "LTXVCropGuides": 1,
+    "LTXVDualCFGGuider": 1,
+    "LTXVEmptyLatentAudio": 1,
+    "LTXVPreprocess": 2,
+    "LTXVSeparateAVLatent": 1,
+    "LoadImage": 2,
+    "ManualSigmas": 1,
+    "PreviewAny": 1,
+    "PrimitiveBoolean": 1,
+    "PrimitiveInt": 4,
+    "PrimitiveStringMultiline": 1,
+    "RandomNoise": 1,
+    "ResizeImageMaskNode": 2,
+    "SamplerCustomAdvanced": 1,
+    "SamplerEulerAncestral": 1,
+    "SaveVideo": 1,
+    "TextGenerateLTX2Prompt": 1,
+    "UNETLoader": 1,
+    "VAEDecodeTiled": 1,
+    "VAELoader": 2
+   },
+   "signatures": {
+    "LoadImage": {
+     "inputs": [],
+     "outputs": [
+      "IMAGE",
+      "MASK"
+     ],
+     "widgets": 2
+    },
+    "SaveVideo": {
+     "inputs": [
+      "video"
+     ],
+     "outputs": [
+      "video"
+     ],
+     "widgets": 3
+    },
+    "MarkdownNote": {
+     "inputs": [],
+     "outputs": [],
+     "widgets": 1
+    },
+    "LTXVConcatAVLatent": {
+     "inputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "outputs": [
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "VAEDecodeTiled": {
+     "inputs": [
+      "samples",
+      "vae"
+     ],
+     "outputs": [
+      "IMAGE"
+     ],
+     "widgets": 4
+    },
+    "LTXVAudioVAEDecode": {
+     "inputs": [
+      "samples",
+      "audio_vae"
+     ],
+     "outputs": [
+      "Audio"
+     ],
+     "widgets": 0
+    },
+    "LTXVSeparateAVLatent": {
+     "inputs": [
+      "av_latent"
+     ],
+     "outputs": [
+      "video_latent",
+      "audio_latent"
+     ],
+     "widgets": 0
+    },
+    "LTXVAddGuide": {
+     "inputs": [
+      "positive",
+      "negative",
+      "vae",
+      "latent",
+      "image",
+      "attention_mask",
+      "iclora_parameters"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 2
+    },
+    "ManualSigmas": {
+     "inputs": [],
+     "outputs": [
+      "SIGMAS"
+     ],
+     "widgets": 1
+    },
+    "LTXVEmptyLatentAudio": {
+     "inputs": [
+      "audio_vae",
+      "frames_number",
+      "frame_rate"
+     ],
+     "outputs": [
+      "Latent"
+     ],
+     "widgets": 3
+    },
+    "LTXVCropGuides": {
+     "inputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "outputs": [
+      "positive",
+      "negative",
+      "latent"
+     ],
+     "widgets": 0
+    },
+    "EmptyLTXVLatentVideo": {
+     "inputs": [
+      "width",
+      "height",
+      "length"
+     ],
+     "outputs": [
+      "LATENT"
+     ],
+     "widgets": 4
+    },
+    "SamplerCustomAdvanced": {
+     "inputs": [
+      "noise",
+      "guider",
+      "sampler",
+      "sigmas",
+      "latent_image"
+     ],
+     "outputs": [
+      "output",
+      "denoised_output"
+     ],
+     "widgets": 0
+    },
+    "LTXVConditioning": {
+     "inputs": [
+      "positive",
+      "negative",
+      "frame_rate"
+     ],
+     "outputs": [
+      "positive",
+      "negative"
+     ],
+     "widgets": 1
+    },
+    "SamplerEulerAncestral": {
+     "inputs": [],
+     "outputs": [
+      "SAMPLER"
+     ],
+     "widgets": 2
+    },
+    "CreateVideo": {
+     "inputs": [
+      "images",
+      "audio",
+      "fps"
+     ],
+     "outputs": [
+      "VIDEO"
+     ],
+     "widgets": 2
+    },
+    "LTXVDualCFGGuider": {
+     "inputs": [
+      "model",
+      "positive",
+      "negative"
+     ],
+     "outputs": [
+      "GUIDER"
+     ],
+     "widgets": 2
+    },
+    "RandomNoise": {
+     "inputs": [
+      "noise_seed"
+     ],
+     "outputs": [
+      "NOISE"
+     ],
+     "widgets": 2
+    },
+    "CLIPTextEncode": {
+     "inputs": [
+      "clip",
+      "text"
+     ],
+     "outputs": [
+      "CONDITIONING"
+     ],
+     "widgets": 1
+    },
+    "ComfySwitchNode": {
+     "inputs": [
+      "on_false",
+      "on_true",
+      "switch"
+     ],
+     "outputs": [
+      "output"
+     ],
+     "widgets": 1
+    },
+    "GetImageSize": {
+     "inputs": [
+      "image"
+     ],
+     "outputs": [
+      "width",
+      "height",
+      "batch_size"
+     ],
+     "widgets": 0
+    },
+    "LTXVPreprocess": {
+     "inputs": [
+      "image"
+     ],
+     "outputs": [
+      "output_image"
+     ],
+     "widgets": 1
+    },
+    "TextGenerateLTX2Prompt": {
+     "inputs": [
+      "clip",
+      "image",
+      "video",
+      "audio",
+      "prompt"
+     ],
+     "outputs": [
+      "generated_text"
+     ],
+     "widgets": 12
+    },
+    "ResizeImageMaskNode": {
+     "inputs": [
+      "input",
+      "resize_type.width",
+      "resize_type.height"
+     ],
+     "outputs": [
+      "resized"
+     ],
+     "widgets": 5
+    },
+    "PreviewAny": {
+     "inputs": [
+      "source"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 0
+    },
+    "UNETLoader": {
+     "inputs": [
+      "unet_name"
+     ],
+     "outputs": [
+      "MODEL"
+     ],
+     "widgets": 2
+    },
+    "VAELoader": {
+     "inputs": [
+      "vae_name"
+     ],
+     "outputs": [
+      "VAE"
+     ],
+     "widgets": 1
+    },
+    "CLIPLoader": {
+     "inputs": [
+      "clip_name"
+     ],
+     "outputs": [
+      "CLIP"
+     ],
+     "widgets": 3
+    },
+    "PrimitiveBoolean": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "BOOLEAN"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveInt": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "INT"
+     ],
+     "widgets": 2
+    },
+    "ComfyMathExpression": {
+     "inputs": [
+      "values.a",
+      "values.b",
+      "values.c"
+     ],
+     "outputs": [
+      "FLOAT",
+      "INT",
+      "BOOL"
+     ],
+     "widgets": 1
+    },
+    "PrimitiveStringMultiline": {
+     "inputs": [
+      "value"
+     ],
+     "outputs": [
+      "STRING"
+     ],
+     "widgets": 1
+    }
+   }
+  }
+ },
+ "constants": {
+  "sigmas_stage1": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0",
+  "sigmas_stage2": "0.85, 0.7250, 0.4219, 0.0",
+  "img_compression": 18,
+  "first_frame_strength": 0.7,
+  "guide_strength": 0.7,
+  "decode": {
+   "tile_size": 512,
+   "overlap": 64,
+   "temporal_size": 64,
+   "temporal_overlap": 8
+  },
+  "latent_channels": 128,
+  "temporal_stride": 8,
+  "spatial_stride": 32,
+  "clip_type": "ltxv"
+ }
+}
