@@ -8,6 +8,77 @@ Also if you want to support this project or my channel, I did make a Ko-fi due t
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J5N221K0D5)
 
+# 🎬 LTX Director Next
+
+A filmmaking front end for **LTX-2.5** in ComfyUI.
+
+Lay a shot out on a timeline — duration, pinned frames, prompt regions, audio —
+then either press **Generate**, or press **Compile workflow** and get the native
+LTX graph with no Director node in it. Same graph either way.
+
+**[Quick start →](docs/QUICKSTART.md)**
+
+### What it is
+
+The Director describes intent. Native ComfyUI and LTX nodes do the work.
+
+A project is a small JSON document — no tensors, no base64, no waveforms. A pure
+function turns it into a ComfyUI workflow. The only Python that touches a tensor
+at run time is the one capability no upstream node provides (Prompt Relay), and
+that is one focused node.
+
+That is the whole design, and it is why the thing should survive the next LTX
+release: a new release is a new compiler adapter, not a rewrite.
+
+### What it does
+
+* **Eight modes** — text, image, first/last frame, keyframes, continue, audio to
+  video, audio only, IC-LoRA control. Single stage or generate-then-refine.
+* **A real timeline.** Drag markers, scrub, snap to the 8-frame grid the model
+  actually uses. Thumbnails come from the server; the browser never decodes video.
+* **Prompt Relay.** Several prompts across one shot, in a *single* sampling pass.
+  No seams, no multiple of the sampling cost. Nothing upstream does this.
+* **Errors in sentences.** *"121 frames is not a length LTX can generate — it
+  needs 1 plus a multiple of 8. Use 121 frames (5.04 s) or 113 frames (4.71 s)."*
+  Never a `KeyError`.
+* **Features hide with a reason.** No `ComfyUI-LTXVideo`? IC-LoRA mode is greyed
+  out and says why, rather than failing at run time.
+* **Nothing hidden.** The compiled prompt is always visible, presets show exactly
+  which settings they changed, and Compile workflow hands you the real graph.
+
+### Nodes
+
+| Node | Does |
+| --- | --- |
+| **LTX Director** | Holds the shot. One string widget, no tensor sockets at all. |
+| **LTX Director Prompt Relay** | `model + clip + spec` → `model + conditioning`. |
+| **LTX Director Compile Workflow** | Writes the shot out as a native LTX graph. |
+
+### Documentation
+
+| | |
+| --- | --- |
+| [Quick start](docs/QUICKSTART.md) | First generated shot in five minutes. |
+| [Workflow guide](docs/WORKFLOWS.md) | Each mode, what it compiles to, when to use it. |
+| [Advanced guide](docs/ADVANCED.md) | Conditioning, Prompt Relay, sampling, memory. |
+| [Migration](docs/MIGRATION.md) | Bringing a Director 2.x timeline across. |
+| [Architecture](docs/ARCHITECTURE.md) | For contributors. |
+| [Research](docs/RESEARCH.md) | The audit this was built from. |
+| [Performance](docs/PERFORMANCE.md) | Measured, with budgets. |
+
+Example workflows, all compiler output:
+[`example_workflows/director_next/`](example_workflows/director_next/).
+
+### Requirements
+
+ComfyUI, recent enough to have LTX-2.5 support built in, and the LTX-2.5 model
+set. [`ComfyUI-LTXVideo`](https://github.com/Lightricks/ComfyUI-LTXVideo) is
+optional and adds IC-LoRA control and audio-only generation.
+
+> **Director 2.x keeps working.** Its nodes are still registered, now labelled
+> *(legacy)*, and saved workflows still load. See
+> [`docs/MIGRATION.md`](docs/MIGRATION.md).
+
 ## ▶️ YouTube Tutorial Videos
 
 <table>
@@ -39,6 +110,18 @@ If you don't see the latest version (v2.0.0) yet in the manager then just downlo
 Also you will need to update ComfyUI-LTXVideo and ComfyUI-KJNodes to the latest version as well. You cannot use this node without updating ComfyUI-LTXVideo!
 
 # 🔄 Recent Updates
+
+**v3.0.0 — LTX Director Next**
+
+A rebuild rather than an update, targeting LTX-2.5. The Director now describes a
+shot and compiles it to a native LTX graph; the old one executed an entire
+pipeline inside a single 26-input node. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+for why, and [`docs/MIGRATION.md`](docs/MIGRATION.md) for moving a shot across.
+
+Director 2.x nodes remain registered and working.
+
+<details>
+<summary>Click to view older Updates</summary>
 
 **v2.0.4**
   * **LTX Director**
@@ -82,9 +165,6 @@ Also you will need to update ComfyUI-LTXVideo and ComfyUI-KJNodes to the latest 
 
   - **Quality of Life Improvements:** Snapping, in/out points, multi-select, mark selection, workspace folder, more HUD options, resizable prompt boxes, new hotkeys, labels, filename preview options, "split at playhead" functionality, end frames (convert any keyframe into a end/last frame), toggleable tracks, NAG Support, tons of bug fixes and more!
 
-<details>
-  <summary>Click to view older Updates</summary>
-  
 **v1.3.9**
   * **Fixed recent updates not showing in the manager**
 
@@ -179,7 +259,12 @@ Overhaul of the load audio node. Features a simple interface to easily trim audi
 # ⚙️ Custom Nodes
 
 
-## LTX Director 2.0
+## LTX Director 2.0 (legacy)
+
+> Superseded by [LTX Director Next](#-ltx-director-next), which targets LTX-2.5.
+> These nodes remain registered and saved workflows still load — see
+> [`docs/MIGRATION.md`](docs/MIGRATION.md).
+
 <img width="1562" height="870" alt="LTX_Director_Wide" src="https://github.com/user-attachments/assets/e2f9edec-c492-443e-84de-0ad1c0db04b3" />
 
 A Complete Timeline Editor For LTX 2.3. This is the sucessor of my previous nodes, and has loads of features in it. It was originally based off of [Kijai's Prompt Relay node](https://github.com/kijai/ComfyUI-PromptRelay) and my LTX Sequencer/Multi Image Loader nodes.
@@ -287,11 +372,24 @@ Please note that due to ComfyUI limitations (and the fact that this node doesn't
 An upgraded Load Audio node. Features a simple interface to easily trim audio. Also allows dragging and dropping files (fixes the original node that doesn't allow dropping in videos). Also compatible with nodes 2.0.
 
 # 💡 Workflows
-Download workflows here: https://github.com/WhatDreamsCost/WhatDreamsCost-ComfyUI/tree/main/example_workflows
+
+**Director Next (LTX-2.5):** [`example_workflows/director_next/`](example_workflows/director_next/)
+— nine graphs covering every mode, all compiler output rather than hand-built.
+
+**Director 2.x (LTX-2.3):** [`example_workflows/`](example_workflows/)
 
 # ❗ Known Issues
 
-Retake mode is not "potent" enough. I am in the process of completely overhauling it and will hopefully release the new version soon. 
+**Retake mode (Director 2.x) is not "potent" enough.** The reason is now
+understood: it assembled a temporal mask by hand rather than using the path
+upstream supports. Director Next does not carry it forward — region edits belong
+to the in/outpainting IC-LoRA, which has dedicated upstream example graphs. See
+[`docs/MIGRATION.md`](docs/MIGRATION.md).
+
+**Audio gap-filling is approximated.** Generating only in the gaps between
+supplied clips needs a per-audio-frame noise mask, and no upstream node builds
+one, so the compiled graph generates across the whole track. Director Next warns
+rather than shipping something that quietly differs from the timeline.
 
 # 💡 Additional Info
 

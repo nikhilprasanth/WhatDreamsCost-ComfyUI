@@ -5,9 +5,13 @@ that can be checked without a GPU unless stated otherwise.
 
 Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
+**Status at 2026-09-11:** M1–M7, M9 and M10 complete; M8 partly done (see below).
+589 Python tests and 40 frontend tests, none needing a GPU, model weights or a
+ComfyUI install. Measured numbers are in [`PERFORMANCE.md`](./PERFORMANCE.md).
+
 ---
 
-## M1 — Core: time, ids, spec, validation
+## `[x]` M1 — Core: time, ids, spec, validation
 
 `director/core/{ids,time,spec,validate}.py`
 
@@ -27,7 +31,7 @@ Acceptance
 
 ---
 
-## M2 — Compiler: graph builder + LTX-2.5 adapter
+## `[x]` M2 — Compiler: graph builder + LTX-2.5 adapter
 
 `director/compiler/{graph,base,ltx25,presets}.py`
 
@@ -50,7 +54,7 @@ Acceptance
 
 ---
 
-## M3 — Capabilities probe
+## `[x]` M3 — Capabilities probe
 
 `director/capabilities/{probe,features}.py`
 
@@ -66,7 +70,7 @@ Acceptance
 
 ---
 
-## M4 — Runtime nodes
+## `[x]` M4 — Runtime nodes
 
 `director/nodes/{project,relay,compile,legacy}.py`
 
@@ -86,7 +90,7 @@ Acceptance
 
 ---
 
-## M5 — Relay extraction
+## `[x]` M5 — Relay extraction
 
 `director/relay/{mask,tokens,patch}.py`
 
@@ -103,7 +107,7 @@ Acceptance
 
 ---
 
-## M6 — API layer
+## `[x]` M6 — API layer
 
 `director/api/{media,project,caps}.py`
 
@@ -122,7 +126,7 @@ Acceptance
 
 ---
 
-## M7 — Frontend
+## `[x]` M7 — Frontend
 
 `js/director/**`
 
@@ -130,7 +134,10 @@ Scope, in order: store + undo → shell → timeline → references → prompt �
 
 Acceptance
 * Creating the node adds no per-frame graph traversal (`onDrawForeground` does not read links).
+  — **met**, and asserted by `test_frontend.py`.
 * 200 markers on the timeline redraw within one frame budget.
+  — the **state** work per drag frame is measured at 0.38 ms. The canvas raster
+  itself needs a real browser and remains a manual check; see `PERFORMANCE.md`.
 * Undo/redo restores exact spec equality.
 * Reloading the page restores the project from the widget alone.
 * Deleting a media file off disk degrades to a placeholder with a message; it does not throw.
@@ -138,19 +145,41 @@ Acceptance
 
 ---
 
-## M8 — Advanced workflows
+## `[~]` M8 — Advanced workflows
 
-Continuation (last frame → next first frame), multi-shot, ingredients/reference sheet, audio
-modes, seed hunter + promote-take, two-stage refinement, IC-LoRA control modes.
+Done
+* **Continue** mode compiles (it is image-to-video pinned to a supplied frame).
+* **Audio modes** — generate, import, gap-fill (approximated, with a warning), mute.
+* **Two-stage refinement**, including the first-frame re-pin after upsampling and
+  the crop-before-upsample ordering that a guided two-stage shot needs.
+* **IC-LoRA control**, with the LoRA's own downscale factor wired through.
+* **Ingredients / reference sheet** via the `character`, `environment`, `object`
+  and `style` reference roles.
+* **Seed-hunt and quality presets**, applied as visible setting deltas.
+* **Takes** — a capped log of seed, time and settings digest, with *Reuse seed*.
 
-Acceptance
-* "Use last frame as next shot" produces a valid I2V spec referencing the previous take's output.
-* Seed hunter compiles N single-stage graphs at draft settings without an upscaler.
-* "Promote take" compiles a two-stage graph pinned to the promoted take's seed and references.
+Not done, and honestly so
+* **"Use last frame as next shot" is not one click.** Continue mode works, but
+  extracting the previous clip's final frame is manual: save the frame, drop it
+  in. Automating it needs the Director to reach into ComfyUI's output history,
+  which is a larger piece of plumbing than it first appears.
+* **"Promote take" is not one click.** Takes offers *Reuse seed*; switching the
+  preset from Seed hunt to Quality afterwards is a second action.
+* **Seed hunter does not queue N runs.** The preset sets one stage, a small size
+  and a random seed; pressing Generate several times is the loop.
+* **Multi-shot sequencing** is not built. LTX-2.5 has native multishot within one
+  generation, which the prompt already reaches — a sequence of *separate* shots
+  with shared state is a project-level feature the Spec does not yet model.
+
+Acceptance, restated for what was built
+* Continue mode compiles to a valid I2V graph — covered by the compiler tests.
+* The seed-hunt preset produces a single-stage shot with no upscaler and a random
+  seed — covered by `test_presets.py`.
+* A take records the seed it ran with, and *Reuse seed* puts it back.
 
 ---
 
-## M9 — Migration
+## `[x]` M9 — Migration
 
 `director/migrations/v2_timeline.py`
 
@@ -163,7 +192,7 @@ Acceptance
 
 ---
 
-## M10 — Optimisation and polish
+## `[x]` M10 — Optimisation and polish
 
 Profile node creation, timeline redraw, spec serialisation, compile time, project size. Then
 documentation (`README`, `QUICKSTART`, `WORKFLOWS`, `ADVANCED`, `MIGRATION`), example workflows
@@ -189,3 +218,41 @@ Acceptance
 
 Tests live in `tests/` and must run with `pytest` on a machine with no ComfyUI, no torch and no
 models installed. Anything that cannot is out of scope for CI and is documented as a manual check.
+
+
+---
+
+## What was found along the way
+
+Worth recording, because each of these was a real defect the tests caught rather
+than a design choice:
+
+* **Two signature errors** in the node table — `ResizeImageMaskNode`'s outputs
+  and `GetVideoComponents`' output count — found by
+  `test_upstream_conformance.py` comparing against the real upstream graphs.
+  Either would have produced a graph that loaded and was wired to the wrong
+  socket, which is the worst available failure mode.
+* **Python and JavaScript disagreed on `snap_dim(80)`.** Python's `round()` uses
+  banker's rounding and gave 64; `Math.round` gave 96. Found by
+  `test_frontend.py` comparing the two implementations over 500 values. Python
+  now rounds halves up to match.
+* **Guides were cropped after the upsampler, not before.** Keyframe tokens live
+  on the latent's temporal axis, so a two-stage shot with guides would have
+  upsampled them as if they were picture.
+* **Prompt Relay was silently dropped when compiling.** A shot with three prompt
+  regions compiled to the same graph as a shot with none. The compiler now emits
+  the relay pair and says so.
+* **`migrate()` mutated its caller's document** through a shallow copy, so
+  importing a project corrupted the one the editor was still holding.
+
+## Deliberately not done
+
+* **Retake mode** is not carried forward. See `MIGRATION.md` — the honest
+  replacement is the in/outpainting IC-LoRA.
+* **Audio gap-filling** is approximated, with a warning, because no upstream node
+  builds the per-frame audio mask it needs.
+* **Low-VRAM loaders** (`LowVRAMCheckpointLoader` and friends) are not emitted.
+  They are a sequencing concern the compiler has no opinion about yet; add them
+  by hand to a compiled graph.
+* **Subgraph layout** is structurally validated and golden-tested, but has not
+  been opened in a running ComfyUI. `flat` is the default for that reason.
