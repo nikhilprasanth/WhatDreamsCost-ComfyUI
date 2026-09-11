@@ -169,6 +169,7 @@ class LTX25Compiler(Compiler):
         self._output(ctx, result)
 
         result.workflow = builder.build()
+        result.api = builder.build_api()
         result.node_index = ctx.index
         result.report.extend(ctx.report.diagnostics)
         return result

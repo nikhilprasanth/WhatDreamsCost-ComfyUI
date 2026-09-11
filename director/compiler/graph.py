@@ -559,6 +559,46 @@ class GraphBuilder:
             "extra": {},
         }
 
+    # -- API format --------------------------------------------------------
+
+    def build_api(self) -> dict[str, Any]:
+        """The same graph in ComfyUI's execution ("API") format.
+
+        ``{node_id: {"class_type": …, "inputs": {name: value | [origin, slot]}}}``
+        — what ``POST /prompt`` takes. The Director's Generate button queues this
+        directly, so a beginner never has to see the canvas; Compile Workflow
+        emits :meth:`build` instead, for anyone who wants to.
+
+        Widgets that exist only in the frontend (``control_after_generate``) are
+        dropped, because they are not inputs and the executor rejects them.
+        Annotation nodes are dropped for the same reason.
+        """
+        prompt: dict[str, Any] = {}
+        for node in self._nodes:
+            signature = node.signature
+            if not signature.inputs and not signature.outputs:
+                continue  # a note, not a step
+
+            widget_names = signature.widget_names
+            inputs: dict[str, Any] = {}
+            for slot in signature.inputs:
+                link = node.links_in.get(slot.name)
+                if link is not None:
+                    inputs[slot.name] = [str(link.node.id), link.index]
+                    continue
+                if not slot.widget:
+                    continue  # an unconnected optional input
+                value = _widget_value(node, widget_names, slot.name)
+                if value is not None:
+                    inputs[slot.name] = value
+
+            prompt[str(node.id)] = {
+                "class_type": node.type,
+                "inputs": inputs,
+                "_meta": {"title": node.title or node.type},
+            }
+        return prompt
+
     # -- envelope ----------------------------------------------------------
 
     def _envelope(
@@ -581,6 +621,18 @@ class GraphBuilder:
             "extra": {"ltxdirector": {"title": self.title}},
             "version": 0.4,
         }
+
+
+def _widget_value(node: NodeHandle, widget_names: tuple[str, ...], input_name: str) -> Any:
+    """The widget value backing ``input_name``, or None when there is none.
+
+    Dynamic-combo inputs carry a dotted name (``sampling_mode.seed``) while the
+    widget is recorded under the leaf (``seed``), so both spellings are tried.
+    """
+    for candidate in (input_name, input_name.rsplit(".", 1)[-1]):
+        if candidate in widget_names:
+            return node.widget_values[widget_names.index(candidate)]
+    return None
 
 
 def _export_name(port: Port, slot: int) -> str:

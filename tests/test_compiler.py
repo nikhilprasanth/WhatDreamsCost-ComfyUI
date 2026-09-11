@@ -576,3 +576,73 @@ def test_subgraph_link_ids_are_unique_across_the_document(base_spec: Spec) -> No
     for sub in workflow["definitions"]["subgraphs"]:
         ids.extend(link["id"] for link in sub["links"])
     assert len(ids) == len(set(ids))
+
+
+# --------------------------------------------------------------------------
+# API (execution) format
+#
+# What POST /prompt takes, and therefore what the Generate button queues.
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("fixture", ALL_MODES)
+def test_the_api_form_covers_every_working_node(
+    fixture: str, request: pytest.FixtureRequest
+) -> None:
+    result = compiled(request.getfixturevalue(fixture))
+    working = [t for t in node_types(result.workflow) if t not in ("MarkdownNote", "Note")]
+    assert len(result.api) == len(working)
+
+
+@pytest.mark.parametrize("fixture", ALL_MODES)
+def test_api_links_resolve_to_real_nodes(fixture: str, request: pytest.FixtureRequest) -> None:
+    api = compiled(request.getfixturevalue(fixture)).api
+    for node_id, node in api.items():
+        for name, value in node["inputs"].items():
+            if isinstance(value, list):
+                origin, slot = value
+                assert origin in api, f"{node['class_type']}.{name} points at missing {origin}"
+                assert isinstance(slot, int)
+
+
+def test_api_node_ids_match_the_workflow(base_spec: Spec) -> None:
+    result = compiled(base_spec)
+    workflow_ids = {str(n["id"]) for n in result.workflow["nodes"]}
+    assert set(result.api) <= workflow_ids
+
+
+def test_frontend_only_widgets_are_not_sent_to_the_executor(base_spec: Spec) -> None:
+    # control_after_generate is a litegraph affordance, not an input; the
+    # executor rejects unknown inputs.
+    api = compiled(base_spec).api
+    for node in api.values():
+        assert "control_after_generate" not in node["inputs"]
+
+
+def test_api_carries_widget_values_and_links_together(spec_i2v: Spec) -> None:
+    api = compiled(spec_i2v).api
+    pin = next(n for n in api.values() if n["class_type"] == "LTXVImgToVideoInplace")
+    assert isinstance(pin["inputs"]["vae"], list), "vae is wired"
+    assert pin["inputs"]["strength"] == pytest.approx(0.7), "strength is a value"
+
+
+def test_api_omits_unconnected_optional_inputs(base_spec: Spec) -> None:
+    api = compiled(base_spec).api
+    create = next(n for n in api.values() if n["class_type"] == "CreateVideo")
+    base_spec.audio.mode = "mute"
+    silent = next(
+        n for n in compiled(base_spec).api.values() if n["class_type"] == "CreateVideo"
+    )
+    assert "audio" in create["inputs"]
+    assert "audio" not in silent["inputs"], "a muted shot must not claim an audio input"
+
+
+def test_the_api_form_is_deterministic(spec_keyframes: Spec) -> None:
+    first = json.dumps(compiled(spec_keyframes).api, sort_keys=True)
+    second = json.dumps(compiled(spec_keyframes).api, sort_keys=True)
+    assert first == second
+
+
+def test_every_api_node_names_a_class(spec_two_stage: Spec) -> None:
+    for node in compiled(spec_two_stage).api.values():
+        assert node["class_type"]
+        assert isinstance(node["inputs"], dict)

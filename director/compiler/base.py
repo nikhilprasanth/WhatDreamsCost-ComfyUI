@@ -32,9 +32,16 @@ __all__ = [
 
 @dataclass
 class CompileResult:
-    """A compiled workflow, plus everything worth saying about it."""
+    """A compiled workflow, plus everything worth saying about it.
+
+    Two forms of the same graph. ``workflow`` is what ComfyUI opens on the
+    canvas; ``api`` is what ``POST /prompt`` executes. The Director's Generate
+    button queues the second so a beginner never has to see the first, while
+    Compile Workflow hands over the first so an expert can edit every node.
+    """
 
     workflow: dict[str, Any]
+    api: dict[str, Any] = field(default_factory=dict)
     report: Report = field(default_factory=Report)
     #: Semantic name → node id, so callers can find the sampler or the save node
     #: without pattern-matching the graph.
@@ -50,14 +57,17 @@ class CompileResult:
     def diagnostics(self) -> list[Diagnostic]:
         return self.report.diagnostics
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
+    def to_dict(self, *, include_api: bool = True) -> dict[str, Any]:
+        payload: dict[str, Any] = {
             "workflow": self.workflow,
             "family": self.family,
             "layout": self.layout,
             "node_index": self.node_index,
             **self.report.to_dict(),
         }
+        if include_api:
+            payload["api"] = self.api
+        return payload
 
 
 class Compiler(ABC):
