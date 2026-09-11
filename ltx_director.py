@@ -735,40 +735,14 @@ def _build_combined_audio(timeline_data_str: str, start_frame: int, duration_fra
 
 
 def _convert_to_latent_lengths(pixel_lengths, temporal_stride, latent_frames):
-    """Convert pixel-space segment lengths to integer latent-space lengths using the
-    largest-remainder method. Targets the full `latent_frames` when the pixel sum looks
-    like full coverage (within one stride of latent_frames * stride). Otherwise targets
-    round(total_pixel / temporal_stride) so partial-coverage timelines stay partial.
+    """Pixel-space segment lengths as whole latent frames.
+
+    Delegates to the Director Next implementation so there is one copy of
+    the apportionment rule rather than two that can drift apart.
     """
-    if not pixel_lengths:
-        return []
-    total_pixel = sum(pixel_lengths)
-    if total_pixel <= 0:
-        return [1] * len(pixel_lengths)
+    from .director.relay import _latent_lengths
 
-    naive_total = max(1, round(total_pixel / temporal_stride))
-    target_total = min(latent_frames, naive_total)
-    # Within one frame of full → user clearly intended full coverage; pin to latent_frames.
-    if target_total >= latent_frames - 1:
-        target_total = latent_frames
-
-    exact = [p * target_total / total_pixel for p in pixel_lengths]
-    result = [int(e) for e in exact]
-    diff = target_total - sum(result)
-    if diff > 0:
-        order = sorted(range(len(exact)), key=lambda i: -(exact[i] - int(exact[i])))
-        for k in range(diff):
-            result[order[k % len(order)]] += 1
-
-    # Ensure every segment has ≥ 1 latent frame (steal from the largest if needed).
-    for i in range(len(result)):
-        if result[i] < 1:
-            max_idx = max(range(len(result)), key=lambda j: result[j])
-            if result[max_idx] > 1:
-                result[max_idx] -= 1
-                result[i] = 1
-
-    return result
+    return _latent_lengths(list(pixel_lengths), temporal_stride, latent_frames)
 
 
 _CLONED_MODEL_CACHE = weakref.WeakKeyDictionary()
