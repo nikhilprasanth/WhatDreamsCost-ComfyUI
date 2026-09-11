@@ -103,11 +103,17 @@ def is_valid_dim(value: int) -> bool:
 
 
 def snap_dim(value: int, *, minimum: int = SPATIAL_STRIDE) -> int:
-    """Round a pixel dimension to the nearest multiple of 32, never below ``minimum``."""
+    """Round a pixel dimension to the nearest multiple of 32, never below ``minimum``.
+
+    Rounds halves **up**, deliberately. Python's ``round`` rounds halves to even,
+    so ``round(80/32)`` is 2 and 80 would snap down to 64 — while the browser
+    mirror's ``Math.round`` gives 3 and snaps up to 96. Two answers to the same
+    question is worse than either answer, and half-up is the one a user expects.
+    """
     if value <= minimum:
         return minimum
-    snapped = int(round(value / SPATIAL_STRIDE)) * SPATIAL_STRIDE
-    return max(minimum, snapped)
+    snapped = math.floor(value / SPATIAL_STRIDE + 0.5) * SPATIAL_STRIDE
+    return max(minimum, int(snapped))
 
 
 # --------------------------------------------------------------------------

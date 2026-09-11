@@ -54,6 +54,7 @@ def register(routes) -> None:
         Called as the user edits, so it runs the real rules rather than a
         browser-side approximation that could drift from them.
         """
+        from ..core.prompt import compile_prompt
         from ..core.validate import validate
 
         try:
@@ -68,6 +69,10 @@ def register(routes) -> None:
             **report.to_dict(),
             "project": spec.to_dict(),
             "digest": spec.digest(),
+            # The compiled prompt rides along so the editor's preview needs one
+            # round trip rather than a full compile to show what will be encoded.
+            "prompt": compile_prompt(spec),
+            "negative": spec.prompt.negative,
         })
 
     @routes.post("/ltxdirector/compile")

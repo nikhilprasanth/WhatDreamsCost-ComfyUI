@@ -1,0 +1,6 @@
+{
+  "name": "ltx-director-web",
+  "private": true,
+  "type": "module",
+  "description": "Marks the served frontend as ES modules. Node's test runner needs this to import them without re-parsing; ComfyUI only ever serves the .js files and ignores this."
+}
