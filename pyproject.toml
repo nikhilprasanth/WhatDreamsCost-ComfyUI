@@ -34,3 +34,12 @@ Icon = "https://raw.githubusercontent.com/WhatDreamsCost/MediaSyncer/refs/heads/
 includes = [] 
 # "requires-comfyui" = ">=1.0.0"  # ComfyUI version compatibility
 
+
+[tool.pytest.ini_options]
+# The repo root carries the ComfyUI entrypoint __init__.py, so pytest would
+# otherwise treat the root as a Package and import it — which fails, because its
+# relative imports only resolve when ComfyUI loads it as a custom node.
+# confcutdir stops the collection tree at tests/, which avoids that entirely.
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--import-mode=importlib --confcutdir=tests -q"
