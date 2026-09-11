@@ -1,0 +1,1241 @@
+{
+ "id": "ad5f9d34-8165-509b-b7dc-c4e2d434f71d",
+ "revision": 0,
+ "last_node_id": 23,
+ "last_link_id": 26,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    40,
+    40
+   ],
+   "size": [
+    340,
+    82
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "UNETLoader"
+   },
+   "widgets_values": [
+    "ltx-2.5-22b-distilled-transformer-bf16.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "CLIPLoader",
+   "pos": [
+    40,
+    300
+   ],
+   "size": [
+    340,
+    106
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2,
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "gemma4-12b-with-proj-ltx-2.5-bf16.safetensors",
+    "ltxv",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "VAELoader",
+   "pos": [
+    40,
+    560
+   ],
+   "size": [
+    340,
+    58
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      21
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "ltx-2.5-video-vae-bf16.safetensors"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "VAELoader",
+   "pos": [
+    40,
+    820
+   ],
+   "size": [
+    340,
+    58
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      8,
+      25
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "ltx-2.5-audio-vae-bf16.safetensors"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "PrimitiveStringMultiline",
+   "pos": [
+    600,
+    40
+   ],
+   "size": [
+    400,
+    180
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "STRING",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "PrimitiveStringMultiline"
+   },
+   "widgets_values": [
+    "A storm-lit harbour at night, shot on 35mm."
+   ],
+   "title": "Prompt"
+  },
+  {
+   "id": 6,
+   "type": "PrimitiveStringMultiline",
+   "pos": [
+    600,
+    300
+   ],
+   "size": [
+    400,
+    180
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "STRING",
+     "type": "STRING",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "PrimitiveStringMultiline"
+   },
+   "widgets_values": [
+    "blurry, out of focus, low contrast, washed out, flickering"
+   ],
+   "title": "Negative prompt"
+  },
+  {
+   "id": 7,
+   "type": "LTXDirectorProject",
+   "pos": [
+    600,
+    560
+   ],
+   "size": [
+    420,
+    260
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "prompt_override",
+     "type": "STRING",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "director",
+     "type": "DIRECTOR_SPEC",
+     "links": [
+      3
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "negative",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "name": "frames",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "fps",
+     "type": "FLOAT",
+     "links": null
+    },
+    {
+     "name": "width",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "height",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "name": "seed",
+     "type": "INT",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXDirectorProject"
+   },
+   "widgets_values": [
+    "{\"schema\":3,\"meta\":{\"name\":\"Prompt Relay\",\"created\":\"\",\"modified\":\"\",\"director_version\":\"3.0.0\",\"note\":\"Prompt regions only. The full project lives in the Director node.\"},\"project\":{\"fps\":24.0,\"width\":1280,\"height\":704,\"frames\":121,\"mode\":\"t2v\"},\"prompt\":{\"mode\":\"simple\",\"raw\":\"A storm-lit harbour at night, shot on 35mm.\",\"negative\":\"blurry, out of focus, low contrast, washed out, flickering\",\"sections\":{\"subject\":\"\",\"scene\":\"\",\"action\":\"\",\"camera\":\"\",\"acting\":\"\",\"lighting\":\"\",\"sound\":\"\",\"dialogue\":\"\",\"technical\":\"\"},\"camera\":{\"move\":\"\",\"intensity\":\"moderate\",\"custom\":\"\"},\"lens\":{\"shot_size\":\"\",\"angle\":\"\",\"height\":\"\",\"focal_mm\":0,\"dof\":\"\",\"lighting\":\"\",\"composition\":\"\"},\"enhance\":{\"enabled\":false,\"seed\":0,\"max_length\":600,\"use_image\":true}},\"references\":[],\"segments\":[{\"id\":\"seg_3390cab385\",\"start\":0,\"length\":40,\"text\":\"the lighthouse beam sweeps left across the water\"},{\"id\":\"seg_c3244cfee1\",\"start\":40,\"length\":40,\"text\":\"rain intensifies and the sea wall takes a wave\"},{\"id\":\"seg_98ff1dd41f\",\"start\":80,\"length\":41,\"text\":\"the beam returns and the harbour goes quiet\"}],\"audio\":{\"enabled\":true,\"mode\":\"generate\",\"clips\":[],\"reference\":null,\"identity_guidance\":3.0},\"media\":{},\"generation\":{\"preset\":\"balanced\",\"stages\":1,\"seed\":42,\"seed_mode\":\"fixed\",\"seed_list\":[],\"video_cfg\":1.0,\"audio_cfg\":1.0,\"sampler\":\"euler_ancestral\",\"refine_sampler\":\"euler\",\"sigmas_stage1\":[],\"sigmas_stage2\":[],\"img_compression\":18,\"first_frame_strength\":0.7,\"guide_strength\":0.7,\"decode\":{\"tile_size\":512,\"overlap\":64,\"temporal_size\":64,\"temporal_overlap\":8,\"bit_depth\":8},\"stage1_divisor\":2,\"save_prefix\":\"video/LTXDirector\"},\"models\":{\"family\":\"ltx2.5\",\"unet\":\"\",\"vae\":\"\",\"audio_vae\":\"\",\"clip\":\"\",\"enhancer_clip\":null,\"upscaler\":null,\"loras\":[]},\"relay\":{\"enabled\":true,\"epsilon\":0.001,\"video_strength\":1.0,\"audio_strength\":1.0,\"video_window_scale\":1.0,\"audio_window_scale\":1.0},\"takes\":[],\"ui\":{\"display_unit\":\"seconds\",\"expanded\":[],\"zoom\":1.0,\"playhead\":0,\"selection\":\"\"}}",
+    -1
+   ],
+   "title": "Prompt regions"
+  },
+  {
+   "id": 8,
+   "type": "LTXDirectorRelay",
+   "pos": [
+    600,
+    820
+   ],
+   "size": [
+    340,
+    130
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    },
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 2
+    },
+    {
+     "name": "director",
+     "type": "DIRECTOR_SPEC",
+     "link": 3
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "links": [
+      11
+     ]
+    },
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "links": [
+      6
+     ]
+    },
+    {
+     "name": "status",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXDirectorRelay"
+   },
+   "widgets_values": [
+    true
+   ],
+   "title": "Prompt Relay"
+  },
+  {
+   "id": 9,
+   "type": "CLIPTextEncode",
+   "pos": [
+    600,
+    1080
+   ],
+   "size": [
+    400,
+    200
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 4
+    },
+    {
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      7
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    ""
+   ]
+  },
+  {
+   "id": 10,
+   "type": "LTXVConditioning",
+   "pos": [
+    600,
+    1340
+   ],
+   "size": [
+    300,
+    78
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 6
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      12
+     ]
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "links": [
+      13
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVConditioning"
+   },
+   "widgets_values": [
+    24.0
+   ]
+  },
+  {
+   "id": 11,
+   "type": "EmptyLTXVLatentVideo",
+   "pos": [
+    1160,
+    40
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      9
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "EmptyLTXVLatentVideo"
+   },
+   "widgets_values": [
+    1280,
+    704,
+    121,
+    1
+   ]
+  },
+  {
+   "id": 12,
+   "type": "LTXVEmptyLatentAudio",
+   "pos": [
+    1160,
+    300
+   ],
+   "size": [
+    320,
+    106
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "audio_vae",
+     "type": "VAE",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Latent",
+     "type": "LATENT",
+     "links": [
+      10
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVEmptyLatentAudio"
+   },
+   "widgets_values": [
+    121,
+    24.0,
+    1
+   ]
+  },
+  {
+   "id": 13,
+   "type": "LTXVConcatAVLatent",
+   "pos": [
+    1160,
+    560
+   ],
+   "size": [
+    300,
+    54
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "video_latent",
+     "type": "LATENT",
+     "link": 9
+    },
+    {
+     "name": "audio_latent",
+     "type": "LATENT",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "links": [
+      18
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVConcatAVLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 14,
+   "type": "RandomNoise",
+   "pos": [
+    1720,
+    40
+   ],
+   "size": [
+    300,
+    82
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    42,
+    "fixed"
+   ]
+  },
+  {
+   "id": 15,
+   "type": "LTXVDualCFGGuider",
+   "pos": [
+    1720,
+    300
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 11
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 12
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      15
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVDualCFGGuider"
+   },
+   "widgets_values": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": 16,
+   "type": "KSamplerSelect",
+   "pos": [
+    1720,
+    560
+   ],
+   "size": [
+    300,
+    58
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      16
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler_ancestral"
+   ]
+  },
+  {
+   "id": 17,
+   "type": "ManualSigmas",
+   "pos": [
+    1720,
+    820
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      17
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ManualSigmas"
+   },
+   "widgets_values": [
+    "1, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0"
+   ]
+  },
+  {
+   "id": 18,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    1720,
+    1080
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 14
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 15
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 16
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 17
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 18
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      19
+     ]
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 19,
+   "type": "LTXVSeparateAVLatent",
+   "pos": [
+    1720,
+    1340
+   ],
+   "size": [
+    300,
+    54
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "av_latent",
+     "type": "LATENT",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "video_latent",
+     "type": "LATENT",
+     "links": [
+      20
+     ]
+    },
+    {
+     "name": "audio_latent",
+     "type": "LATENT",
+     "links": [
+      24
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVSeparateAVLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 20,
+   "type": "VAEDecodeTiled",
+   "pos": [
+    2280,
+    40
+   ],
+   "size": [
+    300,
+    154
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 20
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      22
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAEDecodeTiled"
+   },
+   "widgets_values": [
+    512,
+    64,
+    64,
+    8
+   ]
+  },
+  {
+   "id": 21,
+   "type": "CreateVideo",
+   "pos": [
+    2280,
+    300
+   ],
+   "size": [
+    300,
+    102
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 22
+    },
+    {
+     "name": "audio",
+     "type": "AUDIO",
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "links": [
+      26
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CreateVideo"
+   },
+   "widgets_values": [
+    24.0,
+    8
+   ]
+  },
+  {
+   "id": 22,
+   "type": "LTXVAudioVAEDecode",
+   "pos": [
+    2280,
+    560
+   ],
+   "size": [
+    300,
+    54
+   ],
+   "flags": {},
+   "order": 21,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 24
+    },
+    {
+     "name": "audio_vae",
+     "type": "VAE",
+     "link": 25
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Audio",
+     "type": "AUDIO",
+     "links": [
+      23
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LTXVAudioVAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 23,
+   "type": "SaveVideo",
+   "pos": [
+    2280,
+    820
+   ],
+   "size": [
+    640,
+    400
+   ],
+   "flags": {},
+   "order": 22,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "link": 26
+    }
+   ],
+   "outputs": [
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "video/LTXDirector_t2v",
+    "auto",
+    "auto"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   8,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   2,
+   0,
+   8,
+   1,
+   "CLIP"
+  ],
+  [
+   3,
+   7,
+   0,
+   8,
+   2,
+   "DIRECTOR_SPEC"
+  ],
+  [
+   4,
+   2,
+   0,
+   9,
+   0,
+   "CLIP"
+  ],
+  [
+   5,
+   6,
+   0,
+   9,
+   1,
+   "STRING"
+  ],
+  [
+   6,
+   8,
+   1,
+   10,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   7,
+   9,
+   0,
+   10,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   8,
+   4,
+   0,
+   12,
+   0,
+   "VAE"
+  ],
+  [
+   9,
+   11,
+   0,
+   13,
+   0,
+   "LATENT"
+  ],
+  [
+   10,
+   12,
+   0,
+   13,
+   1,
+   "LATENT"
+  ],
+  [
+   11,
+   8,
+   0,
+   15,
+   0,
+   "MODEL"
+  ],
+  [
+   12,
+   10,
+   0,
+   15,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   13,
+   10,
+   1,
+   15,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   14,
+   0,
+   18,
+   0,
+   "NOISE"
+  ],
+  [
+   15,
+   15,
+   0,
+   18,
+   1,
+   "GUIDER"
+  ],
+  [
+   16,
+   16,
+   0,
+   18,
+   2,
+   "SAMPLER"
+  ],
+  [
+   17,
+   17,
+   0,
+   18,
+   3,
+   "SIGMAS"
+  ],
+  [
+   18,
+   13,
+   0,
+   18,
+   4,
+   "LATENT"
+  ],
+  [
+   19,
+   18,
+   0,
+   19,
+   0,
+   "LATENT"
+  ],
+  [
+   20,
+   19,
+   0,
+   20,
+   0,
+   "LATENT"
+  ],
+  [
+   21,
+   3,
+   0,
+   20,
+   1,
+   "VAE"
+  ],
+  [
+   22,
+   20,
+   0,
+   21,
+   0,
+   "IMAGE"
+  ],
+  [
+   23,
+   22,
+   0,
+   21,
+   1,
+   "AUDIO"
+  ],
+  [
+   24,
+   19,
+   1,
+   22,
+   0,
+   "LATENT"
+  ],
+  [
+   25,
+   4,
+   0,
+   22,
+   1,
+   "VAE"
+  ],
+  [
+   26,
+   21,
+   0,
+   23,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Models",
+   "bounding": [
+    10,
+    -30,
+    400,
+    938
+   ],
+   "color": "#353535",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "Prompt",
+   "bounding": [
+    570,
+    -30,
+    480,
+    1478
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "Canvas",
+   "bounding": [
+    1130,
+    -30,
+    380,
+    674
+   ],
+   "color": "#2a6e3f",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "Generate",
+   "bounding": [
+    1690,
+    -30,
+    460,
+    1454
+   ],
+   "color": "#6e3f6e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "Output",
+   "bounding": [
+    2250,
+    -30,
+    700,
+    1280
+   ],
+   "color": "#444444",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "definitions": {
+  "subgraphs": []
+ },
+ "config": {},
+ "extra": {
+  "ltxdirector": {
+   "title": "LTX Director — T2V"
+  }
+ },
+ "version": 0.4
+}

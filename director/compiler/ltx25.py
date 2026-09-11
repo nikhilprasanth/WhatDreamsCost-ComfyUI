@@ -328,9 +328,13 @@ class LTX25Compiler(Compiler):
                 # The enhanced text is never hidden: it is on the canvas.
                 s.node("PreviewAny", source=encode_source, title="Effective prompt")
 
-            positive = ctx.record("encode_positive", s.node(
-                "CLIPTextEncode", clip=ctx.clip, text=encode_source,
-            )).out()
+            if spec.relay_active:
+                positive = self._relay(ctx, s, encode_source)
+            else:
+                positive = ctx.record("encode_positive", s.node(
+                    "CLIPTextEncode", clip=ctx.clip, text=encode_source,
+                )).out()
+
             negative = ctx.record("encode_negative", s.node(
                 "CLIPTextEncode", clip=ctx.clip, text=negative_text,
             )).out()
@@ -341,6 +345,41 @@ class LTX25Compiler(Compiler):
             ))
             ctx.positive = conditioning.out("positive")
             ctx.negative = conditioning.out("negative")
+
+    def _relay(self, ctx: _Build, s: Section, encode_source: Port) -> Port:
+        """Emit the Director's relay nodes for a shot with several prompt regions.
+
+        This is the one place the compiled graph is not purely native nodes, and
+        it is deliberate: nothing in ComfyUI or ComfyUI-LTXVideo applies
+        per-region prompts in a single sampling pass. Dropping them would mean a
+        graph that renders something other than what the editor showed, which is
+        worse than a graph with two Director nodes in it.
+
+        The embedded project is trimmed to what the relay actually reads, so the
+        workflow does not carry the media registry, take history or panel state.
+        """
+        spec = ctx.spec
+        ctx.report.info(
+            "relay.in_graph",
+            f"{len([x for x in spec.segments if x.text.strip()])} prompt regions are "
+            f"applied by the Director's Prompt Relay node, which stays in the graph.",
+            "Switch Prompt Relay off to compile to native nodes only.",
+            "relay",
+        )
+
+        project = ctx.record("relay_project", s.node(
+            "LTXDirectorProject",
+            project=_relay_spec(spec).to_json(),
+            title="Prompt regions",
+        ))
+        relay = ctx.record("relay", s.node(
+            "LTXDirectorRelay",
+            model=ctx.model, clip=ctx.clip, director=project.out("director"),
+            enabled=True, title="Prompt Relay",
+        ))
+        # The relay returns a patched model; everything downstream must use it.
+        ctx.model = relay.out("model")
+        return relay.out("conditioning")
 
     def _first_frame_media(self, ctx: _Build) -> Port | None:
         for ref in ctx.spec.active_references("keyframe"):
@@ -798,6 +837,23 @@ _CANVAS_BUILDERS: dict[str, Any] = {
     "a2v": LTX25Compiler._canvas_audio_driven,
     "iclora": LTX25Compiler._canvas_iclora,
 }
+
+
+def _relay_spec(spec: Spec) -> Spec:
+    """A minimal project carrying only what Prompt Relay reads.
+
+    Keeps the embedded JSON to a few hundred bytes instead of the whole
+    document: the relay needs the prompt, the regions, its own settings and the
+    shot's geometry, and nothing else.
+    """
+    trimmed = Spec()
+    trimmed.project = spec.project
+    trimmed.prompt = spec.prompt
+    trimmed.segments = spec.segments
+    trimmed.relay = spec.relay
+    trimmed.meta.name = spec.meta.name
+    trimmed.meta.note = "Prompt regions only. The full project lives in the Director node."
+    return trimmed
 
 
 def _format_sigmas(sigmas: list[float]) -> str:

@@ -646,3 +646,68 @@ def test_every_api_node_names_a_class(spec_two_stage: Spec) -> None:
     for node in compiled(spec_two_stage).api.values():
         assert node["class_type"]
         assert isinstance(node["inputs"], dict)
+
+
+# --------------------------------------------------------------------------
+# Prompt Relay in a compiled graph
+#
+# The one place the compiled graph is not purely native nodes, because nothing
+# upstream applies per-region prompts in a single sampling pass. A graph that
+# quietly dropped them would render something other than what the editor showed.
+# --------------------------------------------------------------------------
+
+def test_a_shot_without_regions_compiles_to_native_nodes_only(base_spec: Spec) -> None:
+    types = set(node_types(compiled(base_spec).workflow))
+    assert not any(t.startswith("LTXDirector") for t in types)
+
+
+def test_several_prompt_regions_bring_the_relay_node_into_the_graph(spec_relay: Spec) -> None:
+    workflow = compiled(spec_relay).workflow
+    assert count(workflow, "LTXDirectorProject") == 1
+    assert count(workflow, "LTXDirectorRelay") == 1
+    # The relay encodes the positive side, so only the negative needs an encoder.
+    assert count(workflow, "CLIPTextEncode") == 1
+
+
+def test_the_relay_is_announced_rather_than_slipped_in(spec_relay: Spec) -> None:
+    result = compile_spec(spec_relay)
+    diagnostic = next(d for d in result.report if d.code == "relay.in_graph")
+    assert "stays in the graph" in diagnostic.message
+    assert "Switch Prompt Relay off" in diagnostic.fix
+
+
+def test_switching_relay_off_returns_to_a_purely_native_graph(spec_relay: Spec) -> None:
+    spec_relay.relay.enabled = False
+    types = set(node_types(compiled(spec_relay).workflow))
+    assert not any(t.startswith("LTXDirector") for t in types)
+    assert "CLIPTextEncode" in types
+
+
+def test_the_relays_patched_model_is_what_gets_sampled(spec_relay: Spec) -> None:
+    # Sampling the unpatched model would mean the regions had no effect at all.
+    api = compiled(spec_relay).api
+    relay_id = next(k for k, v in api.items() if v["class_type"] == "LTXDirectorRelay")
+    guider = next(v for v in api.values() if v["class_type"] == "LTXVDualCFGGuider")
+    assert guider["inputs"]["model"][0] == relay_id
+
+
+def test_the_embedded_project_carries_only_what_the_relay_reads(spec_relay: Spec) -> None:
+    from director.core.spec import MediaEntry
+
+    # Give the shot a media registry and some takes; neither belongs in the graph.
+    entry = MediaEntry(filename="unrelated.png", kind="image")
+    spec_relay.media[entry.id] = entry
+    workflow = compiled(spec_relay).workflow
+    embedded = only(workflow, "LTXDirectorProject")["widgets_values"][0]
+
+    assert "unrelated.png" not in embedded
+    assert "the beam sweeps left" in embedded
+    assert len(embedded) < 4096
+
+
+def test_a_single_region_does_not_bring_the_relay_in(base_spec: Spec) -> None:
+    from director.core.spec import Segment
+
+    base_spec.segments = [Segment(start=0, length=121, text="only one")]
+    types = set(node_types(compiled(base_spec).workflow))
+    assert "LTXDirectorRelay" not in types

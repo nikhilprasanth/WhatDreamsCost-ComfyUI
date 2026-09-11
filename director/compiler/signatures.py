@@ -597,6 +597,55 @@ _UTILITY: dict[str, NodeSignature] = {
 }
 
 
+# --------------------------------------------------------------------------
+# the Director's own nodes
+#
+# Emitted only when a shot needs something no upstream node provides. Today
+# that is Prompt Relay: per-region prompts in a single sampling pass, which
+# ComfyUI and ComfyUI-LTXVideo between them have no equivalent for. A compiled
+# graph that dropped them would silently render something other than what the
+# editor showed.
+# --------------------------------------------------------------------------
+
+_DIRECTOR: dict[str, NodeSignature] = {
+    "LTXDirectorProject": NodeSignature(
+        inputs=(
+            _i("project", "STRING", widget=True),
+            _i("prompt_override", "STRING", optional=True),
+            _i("seed_override", "INT", widget=True, optional=True),
+        ),
+        outputs=(
+            _o("director", "DIRECTOR_SPEC"),
+            _o("prompt", "STRING"),
+            _o("negative", "STRING"),
+            _o("frames", "INT"),
+            _o("fps", "FLOAT"),
+            _o("width", "INT"),
+            _o("height", "INT"),
+            _o("seed", "INT"),
+        ),
+        widgets=(("project", ""), ("seed_override", -1)),
+        size=(420, 260),
+    ),
+    "LTXDirectorRelay": NodeSignature(
+        inputs=(
+            _i("model", "MODEL"),
+            _i("clip", "CLIP"),
+            _i("director", "DIRECTOR_SPEC"),
+            _i("latent", "LATENT", optional=True),
+            _i("enabled", "BOOLEAN", widget=True, optional=True),
+        ),
+        outputs=(
+            _o("model", "MODEL"),
+            _o("conditioning", "CONDITIONING"),
+            _o("status", "STRING"),
+        ),
+        widgets=(("enabled", True),),
+        size=(340, 130),
+    ),
+}
+
+
 NODE_SIGNATURES: dict[str, NodeSignature] = {
     **_LOADERS,
     **_CONDITIONING,
@@ -604,6 +653,7 @@ NODE_SIGNATURES: dict[str, NodeSignature] = {
     **_SAMPLING,
     **_MEDIA,
     **_UTILITY,
+    **_DIRECTOR,
 }
 
 
