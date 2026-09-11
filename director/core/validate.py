@@ -25,7 +25,6 @@ from .time import (
     latent_frames_for,
     nearest_valid_frames,
     snap_dim,
-    snap_frames,
 )
 
 __all__ = ["Level", "Diagnostic", "Report", "validate"]

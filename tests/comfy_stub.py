@@ -1,9 +1,15 @@
 """A minimal stand-in for the parts of ComfyUI the Director's nodes import.
 
-Enough of ``comfy_api.latest`` to let node modules be imported and their schemas
-built, so node wiring can be tested on a machine with no ComfyUI. Nothing here
-executes a model — the nodes under test do not touch tensors, which is precisely
-the property this makes checkable.
+:func:`install` provides enough of ``comfy_api.latest`` to import node modules
+and build their schemas, so node wiring can be tested on a machine with no
+ComfyUI. Nothing here executes a model — the nodes under test do not touch
+tensors, which is precisely the property this makes checkable.
+
+:func:`install_full` goes further and stubs the handful of ``comfy``,
+``folder_paths``, ``server`` and ``node_helpers`` names the *legacy* Director 2.x
+modules import, so the whole package can be loaded the way ComfyUI loads a custom
+node. Only names that are actually imported are stubbed — ``torch`` stays real,
+because a catch-all stub breaks its introspection.
 """
 
 from __future__ import annotations
@@ -150,3 +156,120 @@ def install() -> None:
     sys.modules.setdefault("comfy_api", package)
     sys.modules["comfy_api.latest"] = latest
     sys.modules["comfy_api.latest.io"] = io_module
+
+
+# --------------------------------------------------------------------------
+# a fuller stub, for loading the whole package
+# --------------------------------------------------------------------------
+
+class StubRoute:
+    """One recorded registration, shaped like an aiohttp route definition."""
+
+    __slots__ = ("method", "path")
+
+    def __init__(self, method: str, path: str) -> None:
+        self.method = method
+        self.path = path
+
+
+class StubRoutes:
+    """Records route registrations instead of serving them.
+
+    Iterable, like aiohttp's ``RouteTableDef``, so code that inspects the router
+    to avoid registering twice behaves the same here as it does in ComfyUI.
+    """
+
+    def __init__(self) -> None:
+        self.registered: list[tuple[str, str]] = []
+        self._routes: list[StubRoute] = []
+
+    def __iter__(self):
+        return iter(self._routes)
+
+    def __len__(self) -> int:
+        return len(self._routes)
+
+    def __getattr__(self, name: str):
+        if name not in ("get", "post", "put", "delete", "patch"):
+            raise AttributeError(name)
+
+        def decorator(path: str):
+            def wrap(fn):
+                self.registered.append((name.upper(), path))
+                self._routes.append(StubRoute(name.upper(), path))
+                return fn
+            return wrap
+
+        return decorator
+
+
+class StubPromptServer:
+    instance: "StubPromptServer | None" = None
+
+    def __init__(self) -> None:
+        self.routes = StubRoutes()
+        self.number = 0
+        self.prompt_queue = types.SimpleNamespace(put=lambda item: None)
+
+
+def _module(name: str, **attrs: Any) -> types.ModuleType:
+    module = sys.modules.get(name) or types.ModuleType(name)
+    for key, value in attrs.items():
+        setattr(module, key, value)
+    sys.modules[name] = module
+    return module
+
+
+def install_full(*, input_dir: str | None = None, output_dir: str | None = None) -> StubPromptServer:
+    """Stub everything the package imports at load time. Returns the fake server.
+
+    A no-op for anything the real ComfyUI already provides.
+    """
+    import os
+
+    install()
+    noop = lambda *args, **kwargs: None  # noqa: E731
+
+    root = input_dir or os.getcwd()
+    _module(
+        "folder_paths",
+        get_filename_list=lambda folder: [],
+        get_input_directory=lambda: root,
+        get_output_directory=lambda: output_dir or root,
+        get_full_path=lambda *a: None,
+    )
+    _module("node_helpers", conditioning_set_values=lambda cond, values: cond, open_image=noop)
+    _module("nodes", NODE_CLASS_MAPPINGS={}, MAX_RESOLUTION=16384)
+
+    comfy = _module("comfy")
+    comfy.model_management = _module(
+        "comfy.model_management",
+        intermediate_device=lambda: "cpu",
+        load_models_gpu=noop,
+    )
+    comfy.utils = _module("comfy.utils", common_upscale=noop, load_torch_file=noop)
+    comfy.sd = _module("comfy.sd", load_lora_for_models=noop)
+    _module("comfy.ldm")
+    _module("comfy.ldm.modules")
+    _module("comfy.ldm.modules.attention", attention_pytorch=noop, optimized_attention=noop)
+    _module("comfy.samplers", CFGGuider=object)
+    _module("comfy.ldm.lightricks")
+
+    class _Patchifier:
+        def __init__(self, *args, **kwargs) -> None:
+            pass
+
+    _module("comfy_extras")
+    _module(
+        "comfy_extras.nodes_lt",
+        get_noise_mask=noop,
+        LTXVAddGuide=object,
+        SymmetricPatchifier=_Patchifier,
+        conditioning_get_any_value=noop,
+        get_keyframe_idxs=noop,
+    )
+
+    server = StubPromptServer()
+    StubPromptServer.instance = server
+    _module("server", PromptServer=StubPromptServer)
+    return server

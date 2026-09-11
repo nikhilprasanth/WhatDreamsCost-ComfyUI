@@ -34,7 +34,7 @@ safe to reproduce.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 __all__ = ["Slot", "InputSlot", "NodeSignature", "NODE_SIGNATURES", "signature_for"]

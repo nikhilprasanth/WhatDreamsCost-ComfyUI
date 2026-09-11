@@ -28,12 +28,32 @@ Routes, all under ``/ltxdirector``:
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 log = logging.getLogger(__name__)
 
-__all__ = ["register_routes"]
+__all__ = ["register_routes", "PREFIX"]
 
+#: Guards against registering twice within one import of this module.
 _REGISTERED = False
+
+#: Prefix every Director route shares, and the thing we look for to decide
+#: whether some earlier import already registered them.
+PREFIX = "/ltxdirector/"
+
+
+def _already_on(router: Any) -> bool:
+    """True when this router already carries Director routes.
+
+    Checked against the router rather than only against module state, because a
+    package reloaded under a second module name has a fresh ``_REGISTERED`` but
+    the same server — and aiohttp raises on a duplicate route.
+    """
+    try:
+        return any(str(getattr(route, "path", "")).startswith(PREFIX) for route in router)
+    except TypeError:
+        # A router we cannot inspect. Fall back to module state.
+        return False
 
 
 def register_routes() -> bool:
@@ -57,9 +77,14 @@ def register_routes() -> bool:
         log.debug("[LTX Director] ComfyUI server has no router yet.")
         return False
 
+    routes = instance.routes
+    if _already_on(routes):
+        _REGISTERED = True
+        log.debug("[LTX Director] Routes were already registered.")
+        return True
+
     from . import caps, media, project
 
-    routes = instance.routes
     caps.register(routes)
     media.register(routes)
     project.register(routes)

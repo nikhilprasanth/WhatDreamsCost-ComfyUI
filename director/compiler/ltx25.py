@@ -491,7 +491,6 @@ class LTX25Compiler(Compiler):
 
     def _canvas_iclora(self, ctx: _Build, s: Section, video: Port) -> Port:
         """IC-LoRA control: the guide clip steers generation through the LoRA."""
-        spec = ctx.spec
         references = self._control_references(ctx)
         if not references:
             return video

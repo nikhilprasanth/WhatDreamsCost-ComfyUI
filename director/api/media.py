@@ -26,7 +26,7 @@ from typing import Any
 
 from aiohttp import web
 
-from ..core.ids import sha256_file, short
+from ..core.ids import sha256_file
 from .common import fail, ok, safe_join, workspace_directory
 
 log = logging.getLogger(__name__)
@@ -370,7 +370,9 @@ def register(routes) -> None:
             return fail("That file is no longer on disk.", status=404)
 
         digest = sha256_file(source)
-        cached = _cache_path(f"{digest}{short(str(round(at, 2)), 8)}", ".jpg")
+        # One cache entry per (file, position): the same clip thumbnailed at two
+        # points on the timeline is two different pictures.
+        cached = _cache_path(digest, f".{round(at * 100):d}.jpg")
         if not os.path.exists(cached):
             if not make_thumbnail(source, cached, at):
                 return fail(

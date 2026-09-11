@@ -7,7 +7,6 @@ import json
 import pytest
 
 from director import SPEC_SCHEMA
-from director.core import new_spec
 from director.core.codec import DecodeError, from_jsonable
 from director.core.ids import PREFIXES, digest_obj, is_id, new_id
 from director.core.spec import Reference, Segment, Spec, Take, TimePoint

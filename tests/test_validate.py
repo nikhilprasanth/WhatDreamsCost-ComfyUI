@@ -11,7 +11,7 @@ from __future__ import annotations
 import pytest
 
 from director.core import validate
-from director.core.spec import AudioClip, LoraRef, MediaEntry, Reference, Segment, Spec
+from director.core.spec import LoraRef, MediaEntry, Reference, Segment, Spec
 from director.core.validate import Report
 
 
