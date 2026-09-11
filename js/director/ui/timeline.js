@@ -19,7 +19,7 @@
  */
 
 import { thumbnailUrl } from "../net/api.js";
-import { framesToSeconds, label as unitLabel, snapFrames, timecode } from "../state/time.js";
+import { framesToSeconds, label as unitLabel, timecode } from "../state/time.js";
 import { el } from "../util/dom.js";
 
 const RULER_H = 26;
@@ -575,5 +575,3 @@ export function resolveFrame(reference, totalFrames) {
   if (reference.anchor === "end") return Math.max(0, totalFrames - 1);
   return Math.min(Math.max(0, reference.at.frame), Math.max(0, totalFrames - 1));
 }
-
-export { snapFrames };

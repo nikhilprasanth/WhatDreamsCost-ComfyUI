@@ -23,7 +23,7 @@ from ..capabilities import capabilities
 from ..compiler import compile_spec
 from ..core.spec import Spec
 from .project import DirectorSpec
-from .relay import _as_spec
+from .spec_input import as_spec
 
 log = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ class LTXDirectorCompile(io.ComfyNode):
         filename: str = "ltx_director_shot",
         write_file: bool = True,
     ) -> io.NodeOutput:
-        spec = _as_spec(director)
+        spec = as_spec(director)
         result = compile_spec(spec, caps=_caps(), layout=layout)  # type: ignore[arg-type]
 
         for diagnostic in result.report:
@@ -103,7 +103,7 @@ class LTXDirectorCompile(io.ComfyNode):
     @classmethod
     def fingerprint_inputs(cls, director=None, layout: str = "flat", **_: Any) -> str:
         try:
-            return f"{_as_spec(director).digest()}:{layout}"
+            return f"{as_spec(director).digest()}:{layout}"
         except Exception:
             return "unknown"
 

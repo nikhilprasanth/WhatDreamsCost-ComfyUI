@@ -285,5 +285,3 @@ export class PromptPanel {
 function humanise(key) {
   return key.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 }
-
-export { toggle };

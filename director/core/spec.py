@@ -14,7 +14,6 @@ See ``docs/ARCHITECTURE.md`` §4.
 
 from __future__ import annotations
 
-import dataclasses
 import json
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -555,8 +554,3 @@ def new_spec(**overrides: Any) -> Spec:
             raise ValueError(f"Spec has no field {key!r}.")
         setattr(spec, key, value)
     return spec.normalise()
-
-
-def fields_of(cls: type) -> tuple[str, ...]:
-    """Field names of a spec dataclass — used by the frontend schema mirror."""
-    return tuple(f.name for f in dataclasses.fields(cls))

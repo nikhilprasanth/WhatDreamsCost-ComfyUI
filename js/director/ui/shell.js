@@ -594,5 +594,3 @@ export class Shell {
     this.root.tabIndex = 0;
   }
 }
-
-export { timecode };

@@ -16,9 +16,9 @@ import logging
 
 from comfy_api.latest import io
 
-from ..core.spec import Spec
 from ..relay import apply_relay
 from .project import DirectorSpec
+from .spec_input import as_spec
 
 log = logging.getLogger(__name__)
 
@@ -83,7 +83,7 @@ class LTXDirectorRelay(io.ComfyNode):
         latent=None,
         enabled: bool = True,
     ) -> io.NodeOutput:
-        spec = _as_spec(director)
+        spec = as_spec(director)
 
         if not enabled:
             spec = spec.copy()
@@ -104,22 +104,3 @@ class LTXDirectorRelay(io.ComfyNode):
             status = "One prompt region, so no relay was needed."
 
         return io.NodeOutput(result.model, result.conditioning, status)
-
-
-def _as_spec(value) -> Spec:
-    """Accept a Spec, a dict or a JSON string.
-
-    The socket normally carries a Spec, but a workflow saved before a rename, or
-    a spec pasted in by hand, should still work rather than producing a type
-    error the user cannot act on.
-    """
-    if isinstance(value, Spec):
-        return value
-    if isinstance(value, dict):
-        return Spec.from_dict(value)
-    if isinstance(value, str):
-        return Spec.from_json(value)
-    raise ValueError(
-        "The Director input did not carry a project. Connect the LTX Director node's "
-        "'director' output to this node."
-    )
